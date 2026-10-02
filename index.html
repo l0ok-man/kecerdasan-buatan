@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Penilaian Risiko Peminjaman — Fuzzy Mamdani</title>
+  <meta name="description" content="Sistem pendukung keputusan cerdas untuk menilai tingkat risiko peminjaman kredit menggunakan Logika Fuzzy metode Mamdani. Proyek mata kuliah Kecerdasan Buatan.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ======== HEADER ======== -->
+  <header id="header">
+    <div class="container">
+      <h1>🧠 Sistem Penilaian Risiko Peminjaman</h1>
+      <p class="subtitle">Logika Fuzzy · Metode Mamdani · Defuzzifikasi Centroid</p>
+      <div class="badge-row">
+        <span class="badge">Kecerdasan Buatan</span>
+        <span class="badge">Kelas 5D — Sistem Informasi</span>
+        <span class="badge">Mamdani (Max-Min)</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ======== INPUT SECTION ======== -->
+    <section id="input-section" class="section">
+      <div class="container">
+        <h2 class="section-title">📥 Parameter Masukan</h2>
+        <p class="section-desc">Atur penghasilan bulanan dan besar cicilan calon peminjam</p>
+
+        <div class="input-grid">
+
+          <!-- Penghasilan Card -->
+          <div id="penghasilan-card" class="card card-blue">
+            <div class="card-title"><span class="icon">💰</span> Penghasilan Bulanan</div>
+            <div class="input-label">Semesta: Rp 0 — Rp 10.000.000,-</div>
+            <div id="penghasilan-value" class="input-value-display">Rp 3.000.000,-</div>
+            <div id="penghasilan-sub" class="input-value-sub">3.00 Juta / bulan</div>
+            <input type="range" id="penghasilan-slider" min="0" max="10" step="0.1" value="3"
+                   aria-label="Penghasilan bulanan dalam juta rupiah">
+            <div id="penghasilan-bars" class="membership-bars">
+              <div class="mu-bar-row">
+                <span class="mu-bar-label">Rendah</span>
+                <div class="mu-bar-track"><div class="mu-bar-fill low" id="p-bar-rendah"></div></div>
+                <span class="mu-bar-value" id="p-val-rendah">0.67</span>
+              </div>
+              <div class="mu-bar-row">
+                <span class="mu-bar-label">Sedang</span>
+                <div class="mu-bar-track"><div class="mu-bar-fill mid" id="p-bar-sedang"></div></div>
+                <span class="mu-bar-value" id="p-val-sedang">0.33</span>
+              </div>
+              <div class="mu-bar-row">
+                <span class="mu-bar-label">Tinggi</span>
+                <div class="mu-bar-track"><div class="mu-bar-fill high" id="p-bar-tinggi"></div></div>
+                <span class="mu-bar-value" id="p-val-tinggi">0.00</span>
+              </div>
+            </div>
+            <div class="canvas-wrapper">
+              <canvas id="penghasilan-canvas" width="500" height="200"></canvas>
+            </div>
+          </div>
+
+          <!-- Cicilan Card -->
+          <div id="cicilan-card" class="card card-pink">
+            <div class="card-title"><span class="icon">💳</span> Besar Cicilan</div>
+            <div class="input-label">Semesta: Rp 0 — Rp 5.000.000,-</div>
+            <div id="cicilan-value" class="input-value-display">Rp 2.000.000,-</div>
+            <div id="cicilan-sub" class="input-value-sub">2.00 Juta / bulan</div>
+            <input type="range" id="cicilan-slider" min="0" max="5" step="0.1" value="2"
+                   aria-label="Besar cicilan bulanan dalam juta rupiah">
+            <div id="cicilan-bars" class="membership-bars">
+              <div class="mu-bar-row">
+                <span class="mu-bar-label">Ringan</span>
+                <div class="mu-bar-track"><div class="mu-bar-fill low" id="c-bar-ringan"></div></div>
+                <span class="mu-bar-value" id="c-val-ringan">0.00</span>
+              </div>
+              <div class="mu-bar-row">
+                <span class="mu-bar-label">Sedang</span>
+                <div class="mu-bar-track"><div class="mu-bar-fill mid" id="c-bar-sedang"></div></div>
+                <span class="mu-bar-value" id="c-val-sedang">0.50</span>
+              </div>
+              <div class="mu-bar-row">
+                <span class="mu-bar-label">Berat</span>
+                <div class="mu-bar-track"><div class="mu-bar-fill high" id="c-bar-berat"></div></div>
+                <span class="mu-bar-value" id="c-val-berat">0.50</span>
+              </div>
+            </div>
+            <div class="canvas-wrapper">
+              <canvas id="cicilan-canvas" width="500" height="200"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><hr class="nb-divider"></div>
+
+    <!-- ======== RESULT SECTION ======== -->
+    <section id="result-section">
+      <div class="container">
+        <h2 class="section-title">📊 Hasil Penilaian Risiko</h2>
+        <p class="section-desc">Skor risiko dihitung secara real-time menggunakan inferensi fuzzy Mamdani</p>
+
+        <div class="result-grid">
+          <div id="result-card" class="card result-main">
+            <div class="score-label">Skor Risiko Kredit</div>
+            <div class="score-number" id="risk-score">70.16</div>
+            <div class="category-badge high" id="risk-badge">⚠️ Risiko Tinggi</div>
+            <p class="recommendation-text" id="risk-recommendation">
+              Pengajuan pinjaman ditolak. Beban cicilan melebihi kapasitas penghasilan.
+            </p>
+          </div>
+
+          <div id="detail-card" class="card card-cream result-details">
+            <div class="detail-item">
+              <span class="detail-item-label">Penghasilan</span>
+              <span class="detail-item-value" id="detail-penghasilan">Rp 3.000.000,-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-item-label">Cicilan</span>
+              <span class="detail-item-value" id="detail-cicilan">Rp 2.000.000,-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-item-label">Rasio Beban (DSR)</span>
+              <span class="detail-item-value" id="detail-dsr">66.7%</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-item-label">Sisa Dana Bulanan</span>
+              <span class="detail-item-value" id="detail-sisa">Rp 1.000.000,-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-item-label">Metode</span>
+              <span class="detail-item-value">Mamdani (Centroid)</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-item-label">Aturan Aktif</span>
+              <span class="detail-item-value" id="detail-active-rules">4 / 9</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><hr class="nb-divider"></div>
+
+    <!-- ======== ANALYSIS SECTION ======== -->
+    <section id="analysis-section" class="section">
+      <div class="container">
+        <h2 class="section-title">🔬 Analisis Proses Inferensi Mamdani</h2>
+        <p class="section-desc">Langkah demi langkah bagaimana sistem menentukan skor risiko</p>
+
+        <!-- Steps Flow -->
+        <div class="steps-flow">
+          <div class="step-pill"><span class="num">1</span> Fuzzifikasi</div>
+          <span class="step-arrow">→</span>
+          <div class="step-pill"><span class="num">2</span> Evaluasi Aturan (MIN)</div>
+          <span class="step-arrow">→</span>
+          <div class="step-pill"><span class="num">3</span> Agregasi (MAX)</div>
+          <span class="step-arrow">→</span>
+          <div class="step-pill"><span class="num">4</span> Defuzzifikasi (Centroid)</div>
+        </div>
+
+        <div class="analysis-grid">
+
+          <!-- Rules Table -->
+          <div class="card card-orange">
+            <div class="card-title"><span class="icon">📋</span> Evaluasi 9 Aturan IF-THEN</div>
+            <table class="nb-table" id="rules-table">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Penghasilan</th>
+                  <th>Cicilan</th>
+                  <th>→ Risiko</th>
+                  <th>α (MIN)</th>
+                </tr>
+              </thead>
+              <tbody id="rules-tbody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Rule Matrix -->
+          <div class="card card-purple">
+            <div class="card-title"><span class="icon">🗂️</span> Matriks Aturan (3×3)</div>
+            <table class="rule-matrix" id="rule-matrix-table">
+              <thead>
+                <tr>
+                  <th class="corner">Penghasilan \ Cicilan</th>
+                  <th>Ringan</th>
+                  <th>Sedang</th>
+                  <th>Berat</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Rendah</th>
+                  <td id="rm-r1" class="rule-med">Sedang</td>
+                  <td id="rm-r2" class="rule-high">Tinggi</td>
+                  <td id="rm-r3" class="rule-high">Tinggi</td>
+                </tr>
+                <tr>
+                  <th>Sedang</th>
+                  <td id="rm-r4" class="rule-low">Rendah</td>
+                  <td id="rm-r5" class="rule-med">Sedang</td>
+                  <td id="rm-r6" class="rule-high">Tinggi</td>
+                </tr>
+                <tr>
+                  <th>Tinggi</th>
+                  <td id="rm-r7" class="rule-low">Rendah</td>
+                  <td id="rm-r8" class="rule-low">Rendah</td>
+                  <td id="rm-r9" class="rule-med">Sedang</td>
+                </tr>
+              </tbody>
+            </table>
+            <div style="margin-top: 16px;">
+              <div class="card-title"><span class="icon">📊</span> Agregasi Output</div>
+              <table class="nb-table" id="aggregation-table">
+                <thead>
+                  <tr><th>Kategori Output</th><th>μ Agregasi (MAX)</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Risiko Rendah</td><td id="agg-rendah">0.00</td></tr>
+                  <tr><td>Risiko Sedang</td><td id="agg-sedang">0.33</td></tr>
+                  <tr><td>Risiko Tinggi</td><td id="agg-tinggi">0.50</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Output Aggregation Canvas -->
+          <div class="card card-green analysis-full">
+            <div class="card-title"><span class="icon">📈</span> Visualisasi Agregasi Output & Titik Centroid</div>
+            <div class="canvas-wrapper">
+              <canvas id="output-canvas" width="1000" height="320"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======== FOOTER ======== -->
+  <footer id="footer">
+    <div class="container">
+      <p>Sistem Penilaian Risiko Peminjaman — Logika Fuzzy Mamdani</p>
+      <p>Proyek Mata Kuliah <strong>Kecerdasan Buatan</strong> · Kelas 5D Sistem Informasi</p>
+      <div class="footer-badges">
+        <span class="footer-badge">Fuzzifikasi</span>
+        <span class="footer-badge">Inferensi Mamdani</span>
+        <span class="footer-badge">Defuzzifikasi Centroid</span>
+        <span class="footer-badge">9 Aturan IF-THEN</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
