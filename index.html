@@ -3,262 +3,135 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Penilaian Risiko Peminjaman — Fuzzy Mamdani</title>
-  <meta name="description" content="Sistem pendukung keputusan cerdas untuk menilai tingkat risiko peminjaman kredit menggunakan Logika Fuzzy metode Mamdani. Proyek mata kuliah Kecerdasan Buatan.">
+  <title>MFEP - Sistem Pemilihan Laptop</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- ======== HEADER ======== -->
-  <header id="header">
+  <header>
     <div class="container">
-      <h1>🧠 Sistem Penilaian Risiko Peminjaman</h1>
-      <p class="subtitle">Logika Fuzzy · Metode Mamdani · Defuzzifikasi Centroid</p>
-      <div class="badge-row">
-        <span class="badge">Kecerdasan Buatan</span>
-        <span class="badge">Kelas 5D — Sistem Informasi</span>
-        <span class="badge">Mamdani (Max-Min)</span>
-      </div>
+      <h1>💻 Pemilihan Laptop Terbaik</h1>
+      <p>Sistem Pendukung Keputusan menggunakan metode MFEP (Multi Factor Evaluation Process)</p>
     </div>
   </header>
 
-  <main>
+  <main class="container">
+    
+    <div class="grid-2">
+      <!-- PANEL KIRI: Konfigurasi & Form -->
+      <div>
+        
+        <!-- Konfigurasi Bobot -->
+        <div class="card card-yellow">
+          <h2>⚖️ Konfigurasi Bobot Kriteria</h2>
+          <p class="form-text">Total bobot harus bernilai 1.0. Silakan ubah jika diperlukan.</p>
+          
+          <div id="weight-alert" class="alert"></div>
 
-    <!-- ======== INPUT SECTION ======== -->
-    <section id="input-section" class="section">
-      <div class="container">
-        <h2 class="section-title">📥 Parameter Masukan</h2>
-        <p class="section-desc">Atur penghasilan bulanan dan besar cicilan calon peminjam</p>
-
-        <div class="input-grid">
-
-          <!-- Penghasilan Card -->
-          <div id="penghasilan-card" class="card card-blue">
-            <div class="card-title"><span class="icon">💰</span> Penghasilan Bulanan</div>
-            <div class="input-label">Semesta: Rp 0 — Rp 10.000.000,-</div>
-            <div id="penghasilan-value" class="input-value-display">Rp 3.000.000,-</div>
-            <div id="penghasilan-sub" class="input-value-sub">3.00 Juta / bulan</div>
-            <input type="range" id="penghasilan-slider" min="0" max="10" step="0.1" value="3"
-                   aria-label="Penghasilan bulanan dalam juta rupiah">
-            <div id="penghasilan-bars" class="membership-bars">
-              <div class="mu-bar-row">
-                <span class="mu-bar-label">Rendah</span>
-                <div class="mu-bar-track"><div class="mu-bar-fill low" id="p-bar-rendah"></div></div>
-                <span class="mu-bar-value" id="p-val-rendah">0.67</span>
-              </div>
-              <div class="mu-bar-row">
-                <span class="mu-bar-label">Sedang</span>
-                <div class="mu-bar-track"><div class="mu-bar-fill mid" id="p-bar-sedang"></div></div>
-                <span class="mu-bar-value" id="p-val-sedang">0.33</span>
-              </div>
-              <div class="mu-bar-row">
-                <span class="mu-bar-label">Tinggi</span>
-                <div class="mu-bar-track"><div class="mu-bar-fill high" id="p-bar-tinggi"></div></div>
-                <span class="mu-bar-value" id="p-val-tinggi">0.00</span>
-              </div>
+          <div class="grid-2" style="gap: 10px;">
+            <div class="form-group">
+              <label for="weight-harga">Bobot Harga</label>
+              <input type="number" id="weight-harga" value="0.3" step="0.1" min="0" max="1">
             </div>
-            <div class="canvas-wrapper">
-              <canvas id="penghasilan-canvas" width="500" height="200"></canvas>
+            <div class="form-group">
+              <label for="weight-ram">Bobot RAM</label>
+              <input type="number" id="weight-ram" value="0.3" step="0.1" min="0" max="1">
+            </div>
+            <div class="form-group">
+              <label for="weight-baterai">Bobot Baterai</label>
+              <input type="number" id="weight-baterai" value="0.2" step="0.1" min="0" max="1">
+            </div>
+            <div class="form-group">
+              <label for="weight-berat">Bobot Berat</label>
+              <input type="number" id="weight-berat" value="0.2" step="0.1" min="0" max="1">
             </div>
           </div>
-
-          <!-- Cicilan Card -->
-          <div id="cicilan-card" class="card card-pink">
-            <div class="card-title"><span class="icon">💳</span> Besar Cicilan</div>
-            <div class="input-label">Semesta: Rp 0 — Rp 5.000.000,-</div>
-            <div id="cicilan-value" class="input-value-display">Rp 2.000.000,-</div>
-            <div id="cicilan-sub" class="input-value-sub">2.00 Juta / bulan</div>
-            <input type="range" id="cicilan-slider" min="0" max="5" step="0.1" value="2"
-                   aria-label="Besar cicilan bulanan dalam juta rupiah">
-            <div id="cicilan-bars" class="membership-bars">
-              <div class="mu-bar-row">
-                <span class="mu-bar-label">Ringan</span>
-                <div class="mu-bar-track"><div class="mu-bar-fill low" id="c-bar-ringan"></div></div>
-                <span class="mu-bar-value" id="c-val-ringan">0.00</span>
-              </div>
-              <div class="mu-bar-row">
-                <span class="mu-bar-label">Sedang</span>
-                <div class="mu-bar-track"><div class="mu-bar-fill mid" id="c-bar-sedang"></div></div>
-                <span class="mu-bar-value" id="c-val-sedang">0.50</span>
-              </div>
-              <div class="mu-bar-row">
-                <span class="mu-bar-label">Berat</span>
-                <div class="mu-bar-track"><div class="mu-bar-fill high" id="c-bar-berat"></div></div>
-                <span class="mu-bar-value" id="c-val-berat">0.50</span>
-              </div>
-            </div>
-            <div class="canvas-wrapper">
-              <canvas id="cicilan-canvas" width="500" height="200"></canvas>
-            </div>
-          </div>
-
+          <p style="font-weight: 700; text-align: right; margin-top: 10px;">Total Bobot: <span id="total-weight-display">1.0</span></p>
         </div>
+
+        <!-- Form Tambah Laptop -->
+        <div class="card card-blue">
+          <h2>➕ Tambah Alternatif Laptop</h2>
+          <p class="form-text">Masukkan skor 1-100 untuk tiap faktor. (100 = Sangat Baik / Sangat Sesuai).</p>
+          <p class="form-text"><em>Contoh: Harga murah = skor tinggi. Berat ringan = skor tinggi.</em></p>
+          
+          <form id="form-laptop">
+            <div class="form-group">
+              <label for="input-nama">Nama Laptop</label>
+              <input type="text" id="input-nama" placeholder="Contoh: Asus ZenBook" required>
+            </div>
+            <div class="grid-2" style="gap: 10px;">
+              <div class="form-group">
+                <label for="input-harga">Skor Harga</label>
+                <input type="number" id="input-harga" placeholder="1-100" min="1" max="100" required>
+              </div>
+              <div class="form-group">
+                <label for="input-ram">Skor RAM</label>
+                <input type="number" id="input-ram" placeholder="1-100" min="1" max="100" required>
+              </div>
+              <div class="form-group">
+                <label for="input-baterai">Skor Baterai</label>
+                <input type="number" id="input-baterai" placeholder="1-100" min="1" max="100" required>
+              </div>
+              <div class="form-group">
+                <label for="input-berat">Skor Berat</label>
+                <input type="number" id="input-berat" placeholder="1-100" min="1" max="100" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Simpan Laptop</button>
+          </form>
+        </div>
+
       </div>
-    </section>
 
-    <div class="container"><hr class="nb-divider"></div>
-
-    <!-- ======== RESULT SECTION ======== -->
-    <section id="result-section">
-      <div class="container">
-        <h2 class="section-title">📊 Hasil Penilaian Risiko</h2>
-        <p class="section-desc">Skor risiko dihitung secara real-time menggunakan inferensi fuzzy Mamdani</p>
-
-        <div class="result-grid">
-          <div id="result-card" class="card result-main">
-            <div class="score-label">Skor Risiko Kredit</div>
-            <div class="score-number" id="risk-score">70.16</div>
-            <div class="category-badge high" id="risk-badge">⚠️ Risiko Tinggi</div>
-            <p class="recommendation-text" id="risk-recommendation">
-              Pengajuan pinjaman ditolak. Beban cicilan melebihi kapasitas penghasilan.
-            </p>
-          </div>
-
-          <div id="detail-card" class="card card-cream result-details">
-            <div class="detail-item">
-              <span class="detail-item-label">Penghasilan</span>
-              <span class="detail-item-value" id="detail-penghasilan">Rp 3.000.000,-</span>
+      <!-- PANEL KANAN: Hasil Keputusan -->
+      <div>
+        
+        <!-- Hasil Terbaik -->
+        <div class="card card-green" id="best-card">
+          <h2>🏆 Rekomendasi Terbaik</h2>
+          <div id="best-laptop-container">
+            <div class="best-laptop-name">
+              <span>🎉</span> <span id="best-name">Memuat...</span>
             </div>
-            <div class="detail-item">
-              <span class="detail-item-label">Cicilan</span>
-              <span class="detail-item-value" id="detail-cicilan">Rp 2.000.000,-</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-item-label">Rasio Beban (DSR)</span>
-              <span class="detail-item-value" id="detail-dsr">66.7%</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-item-label">Sisa Dana Bulanan</span>
-              <span class="detail-item-value" id="detail-sisa">Rp 1.000.000,-</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-item-label">Metode</span>
-              <span class="detail-item-value">Mamdani (Centroid)</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-item-label">Aturan Aktif</span>
-              <span class="detail-item-value" id="detail-active-rules">4 / 9</span>
+            <p>Memperoleh skor tertinggi berdasarkan hasil evaluasi.</p>
+            
+            <div class="breakdown" id="best-breakdown">
+              <!-- Breakdown calculation will be injected here -->
             </div>
           </div>
         </div>
+
       </div>
-    </section>
+    </div> <!-- End Grid 2 -->
 
-    <div class="container"><hr class="nb-divider"></div>
-
-    <!-- ======== ANALYSIS SECTION ======== -->
-    <section id="analysis-section" class="section">
-      <div class="container">
-        <h2 class="section-title">🔬 Analisis Proses Inferensi Mamdani</h2>
-        <p class="section-desc">Langkah demi langkah bagaimana sistem menentukan skor risiko</p>
-
-        <!-- Steps Flow -->
-        <div class="steps-flow">
-          <div class="step-pill"><span class="num">1</span> Fuzzifikasi</div>
-          <span class="step-arrow">→</span>
-          <div class="step-pill"><span class="num">2</span> Evaluasi Aturan (MIN)</div>
-          <span class="step-arrow">→</span>
-          <div class="step-pill"><span class="num">3</span> Agregasi (MAX)</div>
-          <span class="step-arrow">→</span>
-          <div class="step-pill"><span class="num">4</span> Defuzzifikasi (Centroid)</div>
-        </div>
-
-        <div class="analysis-grid">
-
-          <!-- Rules Table -->
-          <div class="card card-orange">
-            <div class="card-title"><span class="icon">📋</span> Evaluasi 9 Aturan IF-THEN</div>
-            <table class="nb-table" id="rules-table">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Penghasilan</th>
-                  <th>Cicilan</th>
-                  <th>→ Risiko</th>
-                  <th>α (MIN)</th>
-                </tr>
-              </thead>
-              <tbody id="rules-tbody">
-                <!-- Populated by JS -->
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Rule Matrix -->
-          <div class="card card-purple">
-            <div class="card-title"><span class="icon">🗂️</span> Matriks Aturan (3×3)</div>
-            <table class="rule-matrix" id="rule-matrix-table">
-              <thead>
-                <tr>
-                  <th class="corner">Penghasilan \ Cicilan</th>
-                  <th>Ringan</th>
-                  <th>Sedang</th>
-                  <th>Berat</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th>Rendah</th>
-                  <td id="rm-r1" class="rule-med">Sedang</td>
-                  <td id="rm-r2" class="rule-high">Tinggi</td>
-                  <td id="rm-r3" class="rule-high">Tinggi</td>
-                </tr>
-                <tr>
-                  <th>Sedang</th>
-                  <td id="rm-r4" class="rule-low">Rendah</td>
-                  <td id="rm-r5" class="rule-med">Sedang</td>
-                  <td id="rm-r6" class="rule-high">Tinggi</td>
-                </tr>
-                <tr>
-                  <th>Tinggi</th>
-                  <td id="rm-r7" class="rule-low">Rendah</td>
-                  <td id="rm-r8" class="rule-low">Rendah</td>
-                  <td id="rm-r9" class="rule-med">Sedang</td>
-                </tr>
-              </tbody>
-            </table>
-            <div style="margin-top: 16px;">
-              <div class="card-title"><span class="icon">📊</span> Agregasi Output</div>
-              <table class="nb-table" id="aggregation-table">
-                <thead>
-                  <tr><th>Kategori Output</th><th>μ Agregasi (MAX)</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td>Risiko Rendah</td><td id="agg-rendah">0.00</td></tr>
-                  <tr><td>Risiko Sedang</td><td id="agg-sedang">0.33</td></tr>
-                  <tr><td>Risiko Tinggi</td><td id="agg-tinggi">0.50</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Output Aggregation Canvas -->
-          <div class="card card-green analysis-full">
-            <div class="card-title"><span class="icon">📈</span> Visualisasi Agregasi Output & Titik Centroid</div>
-            <div class="canvas-wrapper">
-              <canvas id="output-canvas" width="1000" height="320"></canvas>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- ======== FOOTER ======== -->
-  <footer id="footer">
-    <div class="container">
-      <p>Sistem Penilaian Risiko Peminjaman — Logika Fuzzy Mamdani</p>
-      <p>Proyek Mata Kuliah <strong>Kecerdasan Buatan</strong> · Kelas 5D Sistem Informasi</p>
-      <div class="footer-badges">
-        <span class="footer-badge">Fuzzifikasi</span>
-        <span class="footer-badge">Inferensi Mamdani</span>
-        <span class="footer-badge">Defuzzifikasi Centroid</span>
-        <span class="footer-badge">9 Aturan IF-THEN</span>
+    <!-- Tabel Peringkat -->
+    <div class="card" style="margin-top: 20px;">
+      <h2>📊 Peringkat & Analisis Data (MFEP)</h2>
+      <p class="form-text" style="margin-bottom: 20px;">Tabel menampilkan skor asli dan hasil kali dengan bobot masing-masing faktor. Diurutkan dari skor total tertinggi.</p>
+      
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Peringkat</th>
+              <th>Nama Laptop</th>
+              <th>Harga<br><small>(Skor × Bobot)</small></th>
+              <th>RAM<br><small>(Skor × Bobot)</small></th>
+              <th>Baterai<br><small>(Skor × Bobot)</small></th>
+              <th>Berat<br><small>(Skor × Bobot)</small></th>
+              <th>Total Nilai Akhir</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <!-- Table rows will be injected here -->
+          </tbody>
+        </table>
       </div>
     </div>
-  </footer>
+
+  </main>
 
   <script src="app.js"></script>
 </body>

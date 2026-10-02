@@ -1,104 +1,64 @@
-# Sistem Penilaian Risiko Peminjaman Menggunakan Logika Fuzzy Metode Mamdani
+# Sistem Pemilihan Laptop Terbaik (MFEP)
 
 **Mata Kuliah:** Kecerdasan Buatan (_Artificial Intelligence_)  
-**Topik:** Sistem Inferensi Fuzzy (_Fuzzy Inference System - FIS_)  
-**Metode:** Mamdani (Max-Min) & Defuzzifikasi _Centroid / Center of Gravity (CoG)_
+**Topik:** Sistem Pendukung Keputusan (_Decision Support System_)  
+**Metode:** MFEP (_Multi Factor Evaluation Process_)
 
 ---
 
 ## 📌 Ringkasan Proyek
 
-Proyek ini merancang dan membangun sistem pendukung keputusan cerdas untuk menilai tingkat risiko peminjaman kredit (_credit risk scoring_) pada institusi keuangan (_Fintech_ / Perbankan). Sistem ini memetakan dua parameter utama peminjam, yaitu **Penghasilan Bulanan** dan **Besar Cicilan**, untuk menghasilkan **Skor Indeks Risiko** ($0 - 100$) beserta kategori kelayakannya (**Rendah / Disetujui**, **Sedang / Ditinjau Ulang**, **Tinggi / Ditolak**).
+Proyek ini adalah sebuah aplikasi web statis satu halaman yang dirancang untuk membantu pengguna dalam menyeleksi dan memilih laptop terbaik dari berbagai alternatif. Pengambilan keputusan dilakukan menggunakan metode **Multi Factor Evaluation Process (MFEP)**, yang sangat cocok untuk mengevaluasi beberapa kriteria yang memiliki tingkat kepentingan (bobot) yang berbeda-beda.
+
+Tampilan antarmuka proyek ini dibangun dengan gaya desain **Neubrutalism**, menawarkan visual yang tebal, kontras tinggi, dinamis, dan sangat responsif untuk layar HP maupun Komputer.
 
 ---
 
-## 🏛️ Struktur Dokumen Perancangan
+## ⚖️ Kriteria & Bobot (Faktor Evaluasi)
 
-Dokumentasi dan perencanaan lengkap proyek ini telah disusun secara terstruktur di dalam folder `docs/`:
+Sistem menggunakan 4 kriteria (faktor) utama. Penilaian dilakukan pada rentang skor **1 - 100** (di mana skor 100 berarti sangat baik/sangat sesuai dengan harapan).
 
-```
+1. **Harga (Bobot: 0.3 / 30%)**  
+   _Asumsi: Semakin murah harganya, skor yang diberikan harus semakin tinggi._
+2. **RAM (Bobot: 0.3 / 30%)**  
+   _Asumsi: Kapasitas memori semakin besar, skor semakin tinggi._
+3. **Baterai (Bobot: 0.2 / 20%)**  
+   _Asumsi: Semakin tahan lama daya baterai, skor semakin tinggi._
+4. **Berat (Bobot: 0.2 / 20%)**  
+   _Asumsi: Semakin ringan laptopnya, skor semakin tinggi._
+
+> **Catatan Penting:** Total nilai bobot keseluruhan secara matematis wajib berjumlah persis **1.0**.
+
+---
+
+## ✨ Fitur Utama Sistem
+
+1. **Konfigurasi Bobot Interaktif:** Pengguna bisa mengedit bobot masing-masing faktor secara bebas. Sistem memiliki validasi cerdas jika total bobot lebih atau kurang dari 1.0 (memunculkan peringatan).
+2. **Formulir Input Alternatif:** Pengguna dapat mendaftarkan tipe laptop tanpa batas, memasukkan nama dan nilai (skor) untuk ke-4 faktor pengujian.
+3. **Komputasi Real-time:** Tidak perlu memuat ulang (refresh) halaman. Setiap perubahan bobot, penambahan data, atau penghapusan laptop akan langsung dikalkulasi detik itu juga.
+4. **Papan Peringkat (Leaderboard):** Data langsung diurutkan dari skor total tertinggi hingga terendah di dalam tabel observasi. Peringkat pertama akan otomatis disorot (highlight) dengan warna hijau.
+5. **Rincian Breakdown Juara:** Penjelasan transparan terkait bagaimana laptop peraih skor tertinggi (Peringkat 1) mendapatkan total nilainya melalui jabaran $\Sigma (\text{Skor} \times \text{Bobot})$.
+6. **Default Data:** Sudah dibekali dengan minimal 3 data simulasi sejak pertama dibuka sehingga bisa langsung didemonstrasikan di kelas.
+
+---
+
+## 🚀 Cara Menjalankan Program
+
+Proyek ini murni disusun menggunakan tumpukan teknologi _Client-Side_ (HTML, CSS, dan Vanilla JavaScript) tanpa dependensi modul Node.js atau _database_.
+
+1. Buka folder proyek.
+2. Klik dua kali pada file `index.html`.
+3. File akan langsung terbuka dan siap digunakan melalui _Web Browser_ (Google Chrome, Firefox, Edge, atau Safari).
+
+---
+
+## 📁 Struktur Direktori Berkas
+
+```text
 Kecerdasan Buatan/
 │
-├── README.md                                    <- Informasi umum dan ringkasan proyek
-│
-└── docs/
-    ├── PROPOSAL_SISTEM_FUZZY_MAMDANI.md         <- Dokumen Lengkap (Bab I s.d. Bab IV + Daftar Pustaka)
-    ├── SPESIFIKASI_MATEMATIS_DAN_ATURAN.md     <- Lembar teknis fungsi keanggotaan & 9 aturan fuzzy
-    └── SKENARIO_PENGUJIAN.md                    <- 10 Skenario uji simulasi & analisis sensitivitas
+├── index.html        <- Struktur tampilan (UI) web dan form input
+├── style.css         <- Desain visual sistem (Neubrutalism Design System)
+├── app.js            <- Logika matematika MFEP dan manipulasi data dinamis
+└── README.md         <- Dokumentasi proyek (File ini)
 ```
-
----
-
-## ⚙️ Spesifikasi Arsitektur Sistem Fuzzy
-
-```mermaid
-flowchart LR
-    subgraph Input_Crisp [Input Tegas]
-        IN1["Penghasilan Bulanan\n(0 - 10 Juta)"]
-        IN2["Besar Cicilan\n(0 - 5 Juta)"]
-    end
-
-    subgraph FIS_Mamdani [Fuzzy Inference System Mamdani]
-        direction TB
-        F1["Fuzzifikasi\n(Trapesium & Segitiga)"]
-        R1["Evaluasi 9 Basis Aturan\n(Operator AND / MIN)"]
-        A1["Agregasi Output\n(Operator MAX)"]
-        F1 --> R1 --> A1
-    end
-
-    subgraph Output_Sistem [Defuzzifikasi & Output]
-        D1["Defuzzifikasi Centroid\n(Center of Gravity)"]
-        OUT["Skor Risiko: 0 - 100\nKategori: Rendah | Sedang | Tinggi"]
-        D1 --> OUT
-    end
-
-    IN1 --> F1
-    IN2 --> F1
-    A1 --> D1
-```
-
----
-
-## 📊 Ringkasan Variabel & Himpunan Fuzzy
-
-| Variabel          |  Tipe   | Semesta Pembicaraan |             Himpunan Fuzzy             |             Tipe Kurva             |                           Parameter                           |
-| :---------------- | :-----: | :-----------------: | :------------------------------------: | :--------------------------------: | :-----------------------------------------------------------: |
-| **Penghasilan**   | Input 1 | $0 - 10$ Juta/Bulan | **Rendah**<br>**Sedang**<br>**Tinggi** | Trapesium<br>Segitiga<br>Trapesium |       $[0, 0, 2, 5]$<br>$[2, 5, 8]$<br>$[5, 8, 10, 10]$       |
-| **Cicilan**       | Input 2 | $0 - 5$ Juta/Bulan  | **Ringan**<br>**Sedang**<br>**Berat**  | Trapesium<br>Segitiga<br>Trapesium | $[0, 0, 0.5, 1.5]$<br>$[0.5, 1.5, 2.5]$<br>$[1.5, 2.5, 5, 5]$ |
-| **Risiko Kredit** | Output  | $0 - 100$ (Indeks)  | **Rendah**<br>**Sedang**<br>**Tinggi** | Trapesium<br>Segitiga<br>Trapesium |  $[0, 0, 20, 40]$<br>$[30, 50, 70]$<br>$[60, 80, 100, 100]$   |
-
----
-
-## 📑 Matriks 9 Basis Aturan (_Fuzzy Rule Base_)
-
-| Penghasilan \ Cicilan    | Ringan ($0 - 1.5$ Jt) | Sedang ($0.5 - 2.5$ Jt) | Berat ($1.5 - 5.0$ Jt) |
-| :----------------------- | :-------------------: | :---------------------: | :--------------------: |
-| **Rendah ($0 - 5$ Jt)**  |    [R1] **Sedang**    |     [R2] **Tinggi**     |    [R3] **Tinggi**     |
-| **Sedang ($2 - 8$ Jt)**  |    [R4] **Rendah**    |     [R5] **Sedang**     |    [R6] **Tinggi**     |
-| **Tinggi ($5 - 10$ Jt)** |    [R7] **Rendah**    |     [R8] **Rendah**     |    [R9] **Sedang**     |
-
----
-
-## 🧮 Contoh Verifikasi Hitung Manual (Kasus Bab III)
-
-- **Data Masukan:** Penghasilan = **Rp 3.000.000,-**, Cicilan = **Rp 2.000.000,-**
-- **Hasil Fuzzifikasi:**
-  - Penghasilan: $\mu_{\text{Rendah}}(3) = 0.67$, $\mu_{\text{Sedang}}(3) = 0.33$, $\mu_{\text{Tinggi}}(3) = 0$
-  - Cicilan: $\mu_{\text{Ringan}}(2) = 0$, $\mu_{\text{Sedang}}(2) = 0.50$, $\mu_{\text{Berat}}(2) = 0.50$
-- **Aturan Aktif & Derajat Implikasi ($\alpha$):**
-  - $R_2$ (Rendah & Sedang): $\min(0.67, 0.50) = 0.50 \rightarrow \text{Risiko Tinggi}$
-  - $R_3$ (Rendah & Berat): $\min(0.67, 0.50) = 0.50 \rightarrow \text{Risiko Tinggi}$
-  - $R_5$ (Sedang & Sedang): $\min(0.33, 0.50) = 0.33 \rightarrow \text{Risiko Sedang}$
-  - $R_6$ (Sedang & Berat): $\min(0.33, 0.50) = 0.33 \rightarrow \text{Risiko Tinggi}$
-- **Agregasi Output:**
-  - $\mu_{\text{Tinggi}}^{\text{agg}} = 0.50$, $\mu_{\text{Sedang}}^{\text{agg}} = 0.33$, $\mu_{\text{Rendah}}^{\text{agg}} = 0$
-- **Defuzzifikasi Centroid ($z^*$):**
-  - Skor Risiko: $\approx \mathbf{70.0}$ (Kategori: **Risiko Tinggi / Pinjaman Ditolak**)
-
----
-
-## 🚀 Rencana Pengembangan Lanjutan
-
-1. **Implementasi Komputasi:** Pembuatan script Python untuk komputasi inferensi Mamdani.
-2. **Visualisasi:** Visualisasi grafik kurva fungsi keanggotaan dan pemodelan permukaan keputusan 3D (_Control Surface_).
-3. **Ekspor Laporan:** Format dokumen laporan siap cetak (PDF / Word).
