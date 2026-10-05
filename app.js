@@ -80,12 +80,37 @@ function handleWeightChange() {
   }
 }
 
+function showFormError(message) {
+  const errEl = document.getElementById('form-error');
+  errEl.textContent = message;
+  errEl.style.display = 'block';
+  // Auto-hide after 3 seconds
+  clearTimeout(errEl._timeout);
+  errEl._timeout = setTimeout(() => {
+    errEl.style.display = 'none';
+  }, 3000);
+}
+
 function addLaptop() {
-  const name = document.getElementById('input-nama').value;
+  const name = document.getElementById('input-nama').value.trim();
   const harga = parseInt(document.getElementById('input-harga').value);
   const ram = parseInt(document.getElementById('input-ram').value);
   const baterai = parseInt(document.getElementById('input-baterai').value);
   const berat = parseInt(document.getElementById('input-berat').value);
+
+  // Custom validation
+  if (!name) {
+    showFormError('Isi data terlebih dahulu! Nama laptop tidak boleh kosong.');
+    document.getElementById('input-nama').focus();
+    return;
+  }
+  if (isNaN(harga) || isNaN(ram) || isNaN(baterai) || isNaN(berat)) {
+    showFormError('Isi data terlebih dahulu! Semua kolom skor wajib diisi.');
+    return;
+  }
+
+  // Hide error if validation passes
+  document.getElementById('form-error').style.display = 'none';
 
   laptops.push({
     id: nextId++,

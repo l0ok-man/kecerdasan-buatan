@@ -46,6 +46,9 @@
           </ul>
         </div>
       </div>
+      <div style="margin-top: 20px; text-align: right;">
+        <a href="https://extra.cahyadsn.com/mfep" target="_blank" id="btn-source-mfep" class="btn-source-mfep">Link Source MFEP</a>
+      </div>
     </div>
     
     <div class="grid-2">
@@ -89,25 +92,28 @@
           <form id="form-laptop">
             <div class="form-group">
               <label for="input-nama">Nama Laptop</label>
-              <input type="text" id="input-nama" placeholder="Contoh: Asus ZenBook" required>
+              <input type="text" id="input-nama" placeholder="Contoh: Asus ZenBook">
             </div>
             <div class="grid-2" style="gap: 10px;">
               <div class="form-group">
                 <label for="input-harga">Skor Harga</label>
-                <input type="number" id="input-harga" placeholder="1-100" min="1" max="100" required>
+                <input type="number" id="input-harga" placeholder="1-100" min="1" max="100">
               </div>
               <div class="form-group">
                 <label for="input-ram">Skor RAM</label>
-                <input type="number" id="input-ram" placeholder="1-100" min="1" max="100" required>
+                <input type="number" id="input-ram" placeholder="1-100" min="1" max="100">
               </div>
               <div class="form-group">
                 <label for="input-baterai">Skor Baterai</label>
-                <input type="number" id="input-baterai" placeholder="1-100" min="1" max="100" required>
+                <input type="number" id="input-baterai" placeholder="1-100" min="1" max="100">
               </div>
               <div class="form-group">
                 <label for="input-berat">Skor Berat</label>
-                <input type="number" id="input-berat" placeholder="1-100" min="1" max="100" required>
+                <input type="number" id="input-berat" placeholder="1-100" min="1" max="100">
               </div>
+            </div>
+            <div id="form-error" class="form-error-notif" style="display:none;">
+              Isi data terlebih dahulu! Semua kolom wajib diisi.
             </div>
             <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Simpan Laptop</button>
           </form>

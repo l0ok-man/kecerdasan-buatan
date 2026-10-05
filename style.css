@@ -185,6 +185,57 @@ input[type="number"] {
 .alert.error { background: var(--card-pink); display: block; }
 .alert.success { background: var(--card-green); display: block; }
 
+/* ---------- Form Error Notification ---------- */
+.form-error-notif {
+  margin-top: 12px;
+  padding: 14px 18px;
+  background: #FF3B3B;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: 4px 4px 0 var(--border);
+  animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  0%   { transform: translateX(0); }
+  25%  { transform: translateX(-6px); }
+  50%  { transform: translateX(6px); }
+  75%  { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+/* ---------- Source Link Button ---------- */
+.btn-source-mfep {
+  display: inline-block;
+  padding: 10px 22px;
+  background: #fff;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: 4px 4px 0 var(--border);
+  transition: all 0.15s ease;
+  letter-spacing: 0.03em;
+}
+
+.btn-source-mfep:hover {
+  background: #4CAF50;
+  color: #fff;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--border);
+}
+
+.btn-source-mfep:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 #555;
+}
+
 /* ---------- Tables ---------- */
 .table-responsive {
   overflow-x: auto;
