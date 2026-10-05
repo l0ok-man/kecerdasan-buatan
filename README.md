@@ -6,7 +6,7 @@
 
 ---
 
-## 📌 Ringkasan Proyek
+## Ringkasan Proyek
 
 Proyek ini adalah sebuah aplikasi web statis satu halaman yang dirancang untuk membantu pengguna dalam menyeleksi dan memilih laptop terbaik dari berbagai alternatif. Pengambilan keputusan dilakukan menggunakan metode **Multi Factor Evaluation Process (MFEP)**, yang sangat cocok untuk mengevaluasi beberapa kriteria yang memiliki tingkat kepentingan (bobot) yang berbeda-beda.
 
@@ -14,7 +14,7 @@ Tampilan antarmuka proyek ini dibangun dengan gaya desain **Neubrutalism**, mena
 
 ---
 
-## ⚖️ Kriteria & Bobot (Faktor Evaluasi)
+## Kriteria & Bobot (Faktor Evaluasi)
 
 Sistem menggunakan 4 kriteria (faktor) utama. Penilaian dilakukan pada rentang skor **1 - 100** (di mana skor 100 berarti sangat baik/sangat sesuai dengan harapan).
 
@@ -31,7 +31,7 @@ Sistem menggunakan 4 kriteria (faktor) utama. Penilaian dilakukan pada rentang s
 
 ---
 
-## ✨ Fitur Utama Sistem
+## Fitur Utama Sistem
 
 1. **Konfigurasi Bobot Interaktif:** Pengguna bisa mengedit bobot masing-masing faktor secara bebas. Sistem memiliki validasi cerdas jika total bobot lebih atau kurang dari 1.0 (memunculkan peringatan).
 2. **Formulir Input Alternatif:** Pengguna dapat mendaftarkan tipe laptop tanpa batas, memasukkan nama dan nilai (skor) untuk ke-4 faktor pengujian.
@@ -42,7 +42,7 @@ Sistem menggunakan 4 kriteria (faktor) utama. Penilaian dilakukan pada rentang s
 
 ---
 
-## 🚀 Cara Menjalankan Program
+## Cara Menjalankan Program
 
 Proyek ini murni disusun menggunakan tumpukan teknologi _Client-Side_ (HTML, CSS, dan Vanilla JavaScript) tanpa dependensi modul Node.js atau _database_.
 
@@ -52,7 +52,7 @@ Proyek ini murni disusun menggunakan tumpukan teknologi _Client-Side_ (HTML, CSS
 
 ---
 
-## 📁 Struktur Direktori Berkas
+## Struktur Direktori Berkas
 
 ```text
 Kecerdasan Buatan/
